@@ -78,6 +78,50 @@ class SwiftCalcUITests: XCTestCase {
         
         XCTAssertEqual(displayText, "8.0")
     }
+    
+    #if targetEnvironment(macCatalyst)
+    func testDoubleTapToClearMemory() {
+        let app = XCUIApplication()
+        app.launch()
+        
+        let threeButton = app.buttons["3"]
+        threeButton.tap()
+        let fiveButton = app.buttons["5"]
+        fiveButton.tap()
+        
+        let memoryButton = app.buttons["M+"]
+        memoryButton.tap()
+        
+        let memoryDisplay = app.staticTexts["memoryDisplay"]
+        
+        XCTAssert(memoryDisplay.exists)
+        
+        memoryDisplay.doubleTap()
+        
+        XCTAssertFalse(memoryDisplay.exists)
+    }
+    #else
+    func testSwipeToClearMemory() {
+        let app = XCUIApplication()
+        app.launch()
+        
+        let threeButton = app.buttons["3"]
+        threeButton.tap()
+        let fiveButton = app.buttons["5"]
+        fiveButton.tap()
+        
+        let memoryButton = app.buttons["M+"]
+        memoryButton.tap()
+        
+        let memoryDisplay = app.staticTexts["memoryDisplay"]
+        
+        XCTAssert(memoryDisplay.exists)
+        
+        memoryDisplay.swipeLeft()
+        
+        XCTAssertFalse(memoryDisplay.exists)
+    }
+    #endif
 
     func testLaunchPerformance() throws {
         if #available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 7.0, *) {
